@@ -107,6 +107,27 @@ docker compose up -d
 
 複製 `cloudflare-tunnel/config.yml.example` 為 `config.yml`，填入 Tunnel ID 與 hostname。
 
+## UI 元件規範（強制）
+
+**所有 UI 元件必須使用 shadcn/ui，不得自己刻或用其他 UI library。**
+
+| 需求 | 使用 |
+|------|------|
+| 按鈕 | `<Button>` from `@/components/ui/button` |
+| 輸入框 | `<Input>` from `@/components/ui/input` |
+| 表單 | `<Form>` + `<FormField>` from `@/components/ui/form` |
+| 標籤 | `<Label>` from `@/components/ui/label` |
+| 卡片 | `<Card>` / `<CardHeader>` / `<CardContent>` from `@/components/ui/card` |
+| 頁籤 | `<Tabs>` / `<TabsList>` / `<TabsTrigger>` from `@/components/ui/tabs` |
+| 對話框 | `<Dialog>` from `@/components/ui/dialog` |
+| 下拉選單 | `<Select>` from `@/components/ui/select` |
+| 提示訊息 | `<Toast>` / `useToast` from `@/components/ui/toast` |
+| 徽章 | `<Badge>` from `@/components/ui/badge` |
+| 分隔線 | `<Separator>` from `@/components/ui/separator` |
+| 載入動畫 | shadcn skeleton 或 lucide `<Loader2 className="animate-spin">` |
+
+新增 shadcn 元件：`npx shadcn@latest add <component>`
+
 ## 開發規範
 
 - TypeScript strict mode，禁止使用 `any`
@@ -115,3 +136,4 @@ docker compose up -d
 - 表單驗證統一用 `zod` + `react-hook-form`
 - 圖示統一用 `lucide-react`，禁止使用 emoji 或特殊字元作圖示
 - UI 文字使用繁體中文
+- Section 標題置中（`text-center`），不用左邊 border-l 豎條裝飾
