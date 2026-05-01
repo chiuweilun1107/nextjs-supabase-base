@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style data-omelette-injected>html,body{background:transparent}</style><script data-omelette-injected>(()=>{var A=["https://claude.ai","https://preview.claude.ai","https://eap-omelette.claude.ai"];var L=30000;var u=3000;document.addEventListener("DOMContentLoaded",()=>{const V=window.Babel;const $="om-src-id";if(V&&V.registerPlugin&&!(V.availablePlugins&&V.availablePlugins[$])){V.registerPlugin($,({types:Q})=>({visitor:{JSXOpeningElement(W,X){const K=W.node;if(K.name&&K.name.type==="JSXMemberExpression")return;for(let J=0;J<K.attributes.length;J++){const w=K.attributes[J];if(w.type==="JSXAttribute"&&w.name&&w.name.name==="data-om-id")return}const z=X.file&&X.file.opts&&X.file.opts.filename||"?";const k=K.loc&&K.loc.start;const C=`jsx:${z}:${K.start??0}:${k?k.line:0}:${k?k.column+1:0}`;K.attributes.push(Q.jsxAttribute(Q.jsxIdentifier("data-om-id"),Q.stringLiteral(C)))}}}))}const Z=["transform-react-jsx-source",$];document.querySelectorAll('script[type="text/babel"],script[type="text/jsx"]').forEach((Q,W)=>{const X=Q.getAttribute("data-plugins")||"";const K=Z.filter((z)=>X.indexOf(z)<0);if(K.length){Q.setAttribute("data-plugins",X?`${X},${K.join(",")}`:K.join(","))}if(!Q.hasAttribute("data-filename")){Q.setAttribute("data-filename",Q.getAttribute("src")||`inline-${W}`)}})});var b=window.parent;if(b&&b!==window){const V=(z,k)=>{try{b.postMessage({__omelette_log:true,type:z,data:k},"*")}catch{}};["log","warn","error"].forEach((z)=>{const k=console[z];console[z]=(...C)=>{const J=C.map((w)=>{try{return typeof w==="object"?JSON.stringify(w):String(w)}catch{try{return String(w)}catch{return"[unstringifiable]"}}}).join(" ");V(z,J);k.apply(console,C)}});window.addEventListener("error",(z)=>{const k=z.target;if(k&&k!==window&&k.tagName){const C=k.src||k.href||"";V("resource_error",`${k.tagName} failed to load: ${C}`)}else{V("error",`${z.message||"Unknown error"} at ${z.filename||"?"}:${z.lineno||0}:${z.colno||0}`)}},true);window.addEventListener("unhandledrejection",(z)=>{const k=z.reason;const C=k instanceof Error?`${k.message} ${k.stack}`:String(k);V("error",`Unhandled rejection: ${C}`)});const $=()=>{try{b.postMessage({type:"omelette:height",height:document.documentElement.scrollHeight},"*")}catch{}};if(document.readyState==="complete")$();else window.addEventListener("load",$);if(window.ResizeObserver)new ResizeObserver($).observe(document.documentElement);const Z={};let Q=0;window.claude={complete(z){return new Promise((k,C)=>{if(!A.length){C(new Error("claude.complete: no parent origin"));return}const J=`c${++Q}`;const w=()=>setTimeout(()=>{delete Z[J];C(new Error(`claude.complete: no data for ${L/1000}s`))},L);const Y=w();Z[J]={resolve:k,reject:C,text:"",t:Y,arm:w};try{for(const F of A){b.postMessage({__om_api:true,id:J,body:z},F)}}catch(F){clearTimeout(Y);delete Z[J];C(F)}})}};const W={};let X=0;window.omelette={writeFile:(z,k)=>new Promise((C,J)=>{if(!A.length){C();return}const w=`f${++X}`;const Y=setTimeout(()=>{delete W[w];C()},u);W[w]={resolve:C,reject:J,t:Y};try{for(const F of A){b.postMessage({__om_file:true,id:w,op:"write",path:z,content:k},F)}}catch{clearTimeout(Y);delete W[w];C()}})};const K=(z)=>{try{return JSON.stringify(z)}catch{return JSON.stringify(String(z))}};window.addEventListener("message",(z)=>{if(A.indexOf(z.origin)<0)return;if(z.source!==b)return;const k=z.data;if(!k)return;if(k.__om_file_r){const w=W[k.id];if(!w)return;clearTimeout(w.t);delete W[k.id];if(k.ok)w.resolve();else w.reject(new Error(k.error||"write failed"));return}if(k.__om_api_r){const w=Z[k.id];if(!w)return;if(k.error!=null){clearTimeout(w.t);delete Z[k.id];w.reject(new Error(k.error));return}if(k.chunk!=null){clearTimeout(w.t);w.t=w.arm();w.text+=k.chunk;return}if(k.done){clearTimeout(w.t);delete Z[k.id];w.resolve(k.text!=null?k.text:w.text);return}return}if(!k.__om_eval)return;const C=k;const J=(w)=>{z.source.postMessage({...w,__om_eval_r:1,id:C.id},z.origin)};try{const w=(0,eval)(C.code);if(w&&typeof w.then==="function"){w.then((Y)=>J({ok:1,v:K(Y)}),(Y)=>J({ok:0,e:String(Y)}))}else{J({ok:1,v:K(w)})}}catch(w){J({ok:0,e:String(w)})}})}})();
+</script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stack — next-supabase-starter</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,500&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tokens.css">
+  <style>
+    .page-head {
+      max-width: var(--container-max);
+      margin: 0 auto;
+      padding: var(--space-12) var(--space-6) var(--space-10);
+    }
+    .page-head .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-5);
+    }
+    .page-head h1 {
+      font-family: var(--font-serif);
+      font-weight: var(--headline-weight);
+      font-size: clamp(40px, 5.5vw, 72px);
+      line-height: 1.0;
+      letter-spacing: -0.025em;
+      max-width: 760px;
+    }
+    .page-head .lede {
+      max-width: var(--reading-max);
+      margin-top: var(--space-5);
+      color: var(--color-text-secondary);
+      font-size: 18px;
+    }
+
+    .layout {
+      max-width: var(--container-max);
+      margin: 0 auto;
+      padding: 0 var(--space-6) var(--space-12);
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: var(--space-10);
+    }
+    @media (max-width: 880px) {
+      .layout { grid-template-columns: 1fr; }
+      .toc { position: static !important; }
+    }
+
+    /* TOC */
+    .toc {
+      position: sticky;
+      top: 84px;
+      align-self: start;
+      padding-right: var(--space-5);
+      border-right: 1px solid var(--color-border-subtle);
+      max-height: calc(100vh - 100px);
+    }
+    .toc .label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-4);
+    }
+    .toc ol {
+      list-style: none;
+      padding: 0; margin: 0;
+      display: flex; flex-direction: column;
+      gap: var(--space-3);
+    }
+    .toc li a {
+      display: flex;
+      gap: var(--space-3);
+      align-items: baseline;
+      font-size: 14px;
+      color: var(--color-text-secondary);
+      padding: 4px 0;
+      transition: color var(--duration-fast) var(--ease-out);
+      position: relative;
+    }
+    .toc li a .num {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--color-text-muted);
+      letter-spacing: 0.1em;
+    }
+    .toc li a:hover { color: var(--color-text-primary); }
+    .toc li a.active { color: var(--color-text-primary); }
+    .toc li a.active::before {
+      content: "";
+      position: absolute;
+      left: -25px;
+      top: 50%;
+      width: 16px;
+      height: 1px;
+      background: var(--color-accent);
+    }
+
+    /* Content */
+    .content { max-width: var(--reading-max); }
+    .stack-section {
+      padding: var(--space-12) 0;
+      border-bottom: 1px solid var(--color-border-subtle);
+    }
+    .stack-section:first-child { padding-top: 0; }
+    .stack-section .kicker {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--color-accent);
+      margin-bottom: var(--space-3);
+    }
+    .stack-section h2 {
+      font-family: var(--font-sans);
+      font-size: clamp(22px, 2.5vw, 32px);
+      font-weight: 500;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      margin-bottom: var(--space-2);
+    }
+    .stack-section .summary {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: 22px;
+      line-height: 1.4;
+      letter-spacing: -0.01em;
+      color: var(--color-text-secondary);
+      margin-bottom: var(--space-6);
+    }
+    .stack-section ul.bullets {
+      list-style: none;
+      padding: 0; margin: 0 0 var(--space-8);
+      display: flex; flex-direction: column;
+      gap: var(--space-3);
+    }
+    .stack-section ul.bullets li {
+      display: flex;
+      gap: var(--space-3);
+      align-items: baseline;
+      font-size: 15px;
+      color: var(--color-text-primary);
+    }
+    .stack-section ul.bullets li::before {
+      content: "";
+      flex: 0 0 6px;
+      width: 6px; height: 6px;
+      margin-top: 8px;
+      border-radius: var(--radius-full);
+      background: var(--color-accent);
+      opacity: 0.5;
+    }
+    .stack-section ul.bullets .key {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--color-text-muted);
+      margin-left: 6px;
+    }
+
+    /* Demo container */
+    .demo {
+      margin-top: var(--space-5);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      background: var(--color-surface);
+      padding: var(--space-5);
+    }
+    .demo .demo-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-4);
+    }
+
+    /* ---- Next.js demo: tab switcher ---- */
+    .tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--color-border-subtle);
+      margin-bottom: var(--space-4);
+    }
+    .tabs button {
+      padding: 10px 16px;
+      background: transparent;
+      border: none;
+      font-family: var(--font-sans);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-text-muted);
+      cursor: pointer;
+      position: relative;
+      transition: color var(--duration-fast) var(--ease-out);
+    }
+    .tabs button:hover { color: var(--color-text-primary); }
+    .tabs button.active { color: var(--color-text-primary); }
+    .tabs button.active::after {
+      content: ""; position: absolute;
+      left: 0; right: 0; bottom: -1px;
+      height: 1px; background: var(--color-accent);
+    }
+    .file-tree {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--color-text-primary);
+    }
+    .file-tree .row { display: flex; align-items: center; gap: 8px; }
+    .file-tree .indent { display: inline-block; width: 14px; text-align: center; color: var(--color-text-muted); }
+    .file-tree .dir { color: var(--color-accent); }
+    .file-tree .meta { color: var(--color-text-muted); font-size: 11px; margin-left: 6px; }
+
+    /* ---- Supabase RLS toggle ---- */
+    .rls-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: var(--space-4);
+      background: var(--color-surface-raised);
+      border: 1px solid var(--color-border-subtle);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-4);
+    }
+    .rls-row .info { display: flex; flex-direction: column; gap: 2px; }
+    .rls-row .info .t { font-size: 14px; font-weight: 500; }
+    .rls-row .info .d { font-size: 12px; color: var(--color-text-muted); }
+    .rls-row .switch {
+      position: relative; width: 36px; height: 20px;
+      background: var(--color-border);
+      border: none;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: background-color var(--duration-fast) var(--ease-out);
+    }
+    .rls-row .switch::after {
+      content: ""; position: absolute; top: 2px; left: 2px;
+      width: 16px; height: 16px;
+      background: #fff; border-radius: var(--radius-full);
+      transition: left var(--duration-fast) var(--ease-out);
+    }
+    .rls-row .switch.on { background: var(--color-accent); }
+    .rls-row .switch.on::after { left: 18px; }
+
+    .sql-block {
+      background: var(--color-code-bg);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.7;
+      overflow-x: auto;
+      position: relative;
+      min-height: 130px;
+    }
+    .sql-block .key { color: var(--color-accent); }
+    .sql-block .str { color: var(--color-text-primary); }
+    .sql-block .com { color: var(--color-text-muted); font-style: italic; }
+    .sql-block .ident { color: var(--color-text-secondary); }
+
+    /* ---- shadcn/ui buttons ---- */
+    .button-row {
+      display: flex; flex-wrap: wrap; gap: var(--space-3);
+      align-items: center;
+      padding: var(--space-5) 0;
+      justify-content: center;
+    }
+    .sh-btn {
+      padding: 10px 18px;
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      border-radius: var(--radius-md);
+      border: 1px solid transparent;
+      transition: all var(--duration-fast) var(--ease-out);
+      cursor: pointer;
+    }
+    .sh-btn:hover { transform: scale(1.02); }
+    .sh-btn.default { background: var(--color-text-primary); color: var(--color-bg); }
+    .sh-btn.outline { background: transparent; border-color: var(--color-border); color: var(--color-text-primary); }
+    .sh-btn.outline:hover { border-color: var(--color-text-primary); }
+    .sh-btn.ghost { background: transparent; color: var(--color-text-primary); }
+    .sh-btn.ghost:hover { background: var(--color-surface); }
+    .variant-labels {
+      display: flex; justify-content: center; gap: var(--space-3);
+      margin-top: var(--space-2);
+    }
+    .variant-labels span {
+      flex: 1; text-align: center; max-width: 120px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--color-text-muted);
+    }
+
+    /* ---- Tailwind v4 swatches ---- */
+    .swatches {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+      gap: var(--space-3);
+    }
+    .swatch {
+      cursor: pointer;
+      display: flex; flex-direction: column;
+      gap: 8px;
+      transition: transform var(--duration-fast) var(--ease-out);
+    }
+    .swatch:hover { transform: translateY(-2px); }
+    .swatch .chip {
+      width: 100%;
+      aspect-ratio: 1.6;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border-subtle);
+    }
+    .swatch .name {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--color-text-secondary);
+    }
+    .swatch.active .chip {
+      box-shadow: var(--shadow-focus);
+      border-color: var(--color-accent);
+    }
+    .token-display {
+      margin-top: var(--space-5);
+      padding: var(--space-4);
+      background: var(--color-code-bg);
+      border-radius: var(--radius-md);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: var(--space-4);
+    }
+    .token-display .name { color: var(--color-accent); }
+    .token-display .vals { color: var(--color-text-secondary); }
+    .token-display .swatch-mini {
+      width: 28px; height: 28px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--color-border-subtle);
+      flex: 0 0 28px;
+    }
+
+    [data-fade] { opacity: 0; }
+  </style>
+</head>
+<body>
+  <div class="page-head">
+    <div class="eyebrow">Stack details · v0.1.0</div>
+    <h1 class="serif">Four pieces.<br>Production-ready out of the box.</h1>
+    <p class="lede">Each layer of the stack was chosen for one reason: durability. Below is what's bundled, why, and a small interactive demo of the API surface you'll touch most.</p>
+  </div>
+
+  <div class="layout">
+    <!-- TOC -->
+    <aside class="toc" id="toc">
+      <div class="label">On this page</div>
+      <ol>
+        <li><a href="#nextjs"><span class="num">01</span><span>Next.js 15</span></a></li>
+        <li><a href="#supabase"><span class="num">02</span><span>Supabase</span></a></li>
+        <li><a href="#shadcn"><span class="num">03</span><span>shadcn/ui</span></a></li>
+        <li><a href="#tailwind"><span class="num">04</span><span>Tailwind v4</span></a></li>
+      </ol>
+    </aside>
+
+    <!-- Content -->
+    <main class="content">
+      <!-- Next.js -->
+      <section class="stack-section" id="nextjs" data-fade>
+        <div class="kicker">01 · Framework</div>
+        <h2>Next.js 15</h2>
+        <p class="summary">Server Components, streaming, and the App Router — configured the way you'd configure them after six months of pain.</p>
+        <ul class="bullets">
+          <li>App Router with parallel routes and intercepting modals <span class="key">app/</span></li>
+          <li>Streaming SSR + React Server Components by default</li>
+          <li>Typed route handlers with zod-validated inputs <span class="key">/api/*</span></li>
+          <li>Edge + Node runtime examples wired side-by-side</li>
+        </ul>
+        <div class="demo">
+          <div class="demo-label">File structure · interactive</div>
+          <div class="tabs" data-tab-group="next">
+            <button class="active" data-tab="app">App Router</button>
+            <button data-tab="pages">Pages Router</button>
+          </div>
+          <div class="file-tree" id="next-tree">
+            <!-- populated by script -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Supabase -->
+      <section class="stack-section" id="supabase" data-fade>
+        <div class="kicker">02 · Database &amp; Auth</div>
+        <h2>Supabase</h2>
+        <p class="summary">Postgres, auth, realtime, and storage from one client. Row-level security wired in from the first migration.</p>
+        <ul class="bullets">
+          <li>Email + OAuth auth with refresh-token rotation</li>
+          <li>Migrations managed via the Supabase CLI <span class="key">supabase/migrations</span></li>
+          <li>Type-safe client generated from schema <span class="key">database.types.ts</span></li>
+          <li>Realtime channels and broadcast helpers ready to import</li>
+        </ul>
+        <div class="demo">
+          <div class="demo-label">Row-level security · live policy</div>
+          <div class="rls-row">
+            <div class="info">
+              <span class="t">Enable RLS on <code style="font-family:var(--font-mono);font-size:12px">posts</code></span>
+              <span class="d">When on, only owners can read their own rows.</span>
+            </div>
+            <button class="switch on" id="rls-switch" aria-pressed="true"></button>
+          </div>
+          <div class="sql-block" id="rls-sql">
+            <!-- populated by script -->
+          </div>
+        </div>
+      </section>
+
+      <!-- shadcn/ui -->
+      <section class="stack-section" id="shadcn" data-fade>
+        <div class="kicker">03 · Components</div>
+        <h2>shadcn/ui</h2>
+        <p class="summary">Components live in your repo, not your node_modules. Read the source, edit a className, ship.</p>
+        <ul class="bullets">
+          <li>40+ Radix-based primitives, fully themeable</li>
+          <li>Variants typed via <code style="font-family:var(--font-mono);font-size:12px">cva</code> — no className spaghetti</li>
+          <li>Dark mode controlled by a single class on <span class="key">html.dark</span></li>
+          <li>Forms wired to react-hook-form + zod from the start</li>
+        </ul>
+        <div class="demo">
+          <div class="demo-label">Button variants · interactive</div>
+          <div class="button-row">
+            <button class="sh-btn default">Get started</button>
+            <button class="sh-btn outline">Learn more</button>
+            <button class="sh-btn ghost">Skip</button>
+          </div>
+          <div class="variant-labels">
+            <span>default</span>
+            <span>outline</span>
+            <span>ghost</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tailwind -->
+      <section class="stack-section" id="tailwind" data-fade>
+        <div class="kicker">04 · Styling</div>
+        <h2>Tailwind v4</h2>
+        <p class="summary">CSS-first configuration, no <code style="font-family:var(--font-mono);font-size:12px">tailwind.config.js</code>. Tokens live in <code style="font-family:var(--font-mono);font-size:12px">@theme</code> blocks alongside your CSS.</p>
+        <ul class="bullets">
+          <li>OKLCH color tokens, perceptually-uniform palettes</li>
+          <li>Container queries + cascade layers configured by default</li>
+          <li>Native CSS variables — your brand tokens are real CSS vars</li>
+          <li>5x faster compiles vs. v3 on a cold cache</li>
+        </ul>
+        <div class="demo">
+          <div class="demo-label">Token viewer · hover a swatch</div>
+          <div class="swatches" id="tw-swatches"></div>
+          <div class="token-display" id="tw-display">
+            <span class="name">--color-accent</span>
+            <span class="vals">hsl(17 48% 58%) · #CC785C</span>
+            <span class="swatch-mini" style="background:#CC785C"></span>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="shared.js"></script>
+  <script>NSSMount('stack');</script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+
+  <script>
+    // ---- Next.js tabs ----
+    const NEXT_TREES = {
+      app: [
+        ['📁','app',           'dir', 0],
+        ['│','layout.tsx',     'file',1, 'root layout'],
+        ['│','page.tsx',       'file',1, 'home'],
+        ['├','(marketing)',    'dir', 1, 'route group'],
+        ['│','page.tsx',       'file',2],
+        ['├','dashboard',      'dir', 1],
+        ['│','layout.tsx',     'file',2, 'protected'],
+        ['│','page.tsx',       'file',2],
+        ['│','@analytics',     'dir', 2, 'parallel'],
+        ['└','api',            'dir', 1],
+        ['  ','auth/route.ts', 'file',2],
+      ],
+      pages: [
+        ['📁','pages',         'dir', 0],
+        ['│','_app.tsx',       'file',1],
+        ['│','_document.tsx',  'file',1],
+        ['│','index.tsx',      'file',1, 'home'],
+        ['├','dashboard',      'dir', 1],
+        ['│','index.tsx',      'file',2],
+        ['│','settings.tsx',   'file',2],
+        ['└','api',            'dir', 1],
+        ['  ','auth.ts',       'file',2],
+        ['  ','hello.ts',      'file',2],
+      ],
+    };
+    function renderTree(which) {
+      const rows = NEXT_TREES[which].map(([prefix, name, kind, depth, meta]) => {
+        const indent = '&nbsp;&nbsp;'.repeat(depth);
+        const cls = kind === 'dir' ? 'dir' : '';
+        const metaHtml = meta ? `<span class="meta">— ${meta}</span>` : '';
+        const icon = kind === 'dir' && depth > 0 ? '📂'.replace('📂','') : '';
+        // We're not allowed emoji — use ascii-style markers
+        const marker = kind === 'dir' ? '/' : '';
+        return `<div class="row"><span class="indent">${indent}</span><span class="${cls}">${name}${marker}</span>${metaHtml}</div>`;
+      }).join('');
+      document.getElementById('next-tree').innerHTML = rows;
+    }
+    renderTree('app');
+    document.querySelectorAll('[data-tab-group="next"] button').forEach(b => {
+      b.addEventListener('click', () => {
+        document.querySelectorAll('[data-tab-group="next"] button').forEach(x => x.classList.remove('active'));
+        b.classList.add('active');
+        renderTree(b.dataset.tab);
+      });
+    });
+
+    // ---- RLS demo ----
+    const SQL_ON = `<span class="com">-- Generated migration · supabase/migrations/0001_posts_rls.sql</span>
+<span class="key">alter table</span> <span class="ident">posts</span> <span class="key">enable row level security</span>;
+
+<span class="key">create policy</span> <span class="str">"Users can read own posts"</span>
+  <span class="key">on</span> <span class="ident">posts</span> <span class="key">for select</span>
+  <span class="key">using</span> ( auth.uid() = <span class="ident">user_id</span> );`;
+    const SQL_OFF = `<span class="com">-- RLS disabled · all rows are publicly readable</span>
+<span class="key">alter table</span> <span class="ident">posts</span> <span class="key">disable row level security</span>;
+
+<span class="com">-- ⚠ no policies enforced · any authenticated client</span>
+<span class="com">--   can read every row in this table.</span>`;
+    const rlsSwitch = document.getElementById('rls-switch');
+    const rlsSql = document.getElementById('rls-sql');
+    function updateRls(on) {
+      rlsSql.innerHTML = on ? SQL_ON : SQL_OFF;
+      rlsSwitch.classList.toggle('on', on);
+      rlsSwitch.setAttribute('aria-pressed', on);
+    }
+    updateRls(true);
+    rlsSwitch.addEventListener('click', () => {
+      updateRls(!rlsSwitch.classList.contains('on'));
+    });
+
+    // ---- Tailwind swatches ----
+    const TOKENS = [
+      { name: '--color-bg',           hex: '#FAFAF8', hsl: 'hsl(60 10% 98%)' },
+      { name: '--color-surface',      hex: '#F5F4F1', hsl: 'hsl(48 10% 95%)' },
+      { name: '--color-border',       hex: '#E4E2DB', hsl: 'hsl(45 13% 87%)' },
+      { name: '--color-text-primary', hex: '#1A1917', hsl: 'hsl(30 7% 9%)'   },
+      { name: '--color-text-secondary', hex: '#6B6860', hsl: 'hsl(35 5% 40%)' },
+      { name: '--color-accent',       hex: '#CC785C', hsl: 'hsl(17 48% 58%)' },
+      { name: '--color-accent-hover', hex: '#B8664A', hsl: 'hsl(17 44% 50%)' },
+      { name: '--color-code-bg',      hex: '#F0EEE9', hsl: 'hsl(43 13% 93%)' },
+    ];
+    const swatchEl = document.getElementById('tw-swatches');
+    swatchEl.innerHTML = TOKENS.map((t, i) => `
+      <div class="swatch ${i === 5 ? 'active' : ''}" data-i="${i}">
+        <div class="chip" style="background:${t.hex}"></div>
+        <div class="name">${t.name.replace('--color-','')}</div>
+      </div>
+    `).join('');
+    const display = document.getElementById('tw-display');
+    function showToken(i) {
+      const t = TOKENS[i];
+      display.innerHTML = `
+        <span class="name">${t.name}</span>
+        <span class="vals">${t.hsl} · ${t.hex}</span>
+        <span class="swatch-mini" style="background:${t.hex}"></span>
+      `;
+      document.querySelectorAll('.swatch').forEach(s => s.classList.toggle('active', parseInt(s.dataset.i)===i));
+    }
+    document.querySelectorAll('.swatch').forEach(s => {
+      s.addEventListener('mouseenter', () => showToken(parseInt(s.dataset.i)));
+      s.addEventListener('click', () => showToken(parseInt(s.dataset.i)));
+    });
+
+    // ---- ScrollTrigger reveals + TOC active state ----
+    if (typeof gsap !== 'undefined') {
+      gsap.registerPlugin(ScrollTrigger);
+      const reduced = document.documentElement.classList.contains('reduce-motion')
+                   || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      document.querySelectorAll('[data-fade]').forEach(el => {
+        if (reduced) { el.style.opacity = 1; return; }
+        gsap.fromTo(el, { opacity: 0, y: 20 }, {
+          opacity: 1, y: 0, duration: 0.6, ease: 'power3.out',
+          scrollTrigger: { trigger: el, start: 'top 85%' },
+        });
+      });
+    }
+
+    // TOC scrollspy
+    const tocLinks = document.querySelectorAll('.toc a');
+    const sections = ['nextjs','supabase','shadcn','tailwind'].map(id => document.getElementById(id));
+    function updateToc() {
+      const y = window.scrollY + 140;
+      let active = sections[0].id;
+      sections.forEach(s => { if (s.offsetTop <= y) active = s.id; });
+      tocLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + active));
+    }
+    window.addEventListener('scroll', updateToc, { passive: true });
+    updateToc();
+  </script>
+</body>
+</html>
