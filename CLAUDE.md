@@ -30,7 +30,10 @@ src/
 │           └── [id]/route.ts # GET signed URL / DELETE
 ├── components/
 │   ├── ui/                  # shadcn/ui 基礎元件
-│   └── auth/                # 身份驗證相關元件
+│   ├── auth/                # 身份驗證相關元件
+│   └── blocks/
+│       ├── NavBar.tsx       # 固定頂部導航（'use client'，含 active state + mobile hamburger）
+│       └── Footer.tsx       # 多欄頁腳（品牌名 + tagline + 連結欄 + 版權）
 └── lib/
     ├── supabase/
     │   ├── client.ts        # Browser Client（Client Component 用）
@@ -85,6 +88,74 @@ public.profiles (
 - 外鍵命名為 `{table_singular}_id`
 - 時間欄位統一用 `timestamptz`
 - 新資料表必須啟用 RLS
+
+## Blocks 使用方式（NavBar / Footer）
+
+`src/components/blocks/` 是佈局積木，直接放進 layout.tsx 即用。
+
+### NavBar
+
+```tsx
+import { NavBar } from '@/components/blocks/NavBar'
+
+// layout.tsx 範例
+<NavBar
+  brandMark="MY APP"
+  links={[
+    { label: '功能', href: '/features' },
+    { label: '定價', href: '/pricing' },
+  ]}
+  cta={{ label: '開始使用', href: '/register' }}
+/>
+```
+
+- `'use client'`（使用 `usePathname` + `useState`）
+- 固定置頂，自動 active state，手機版含 hamburger
+- 全用 `hsl(var(--*))` shadcn CSS 變數，切 dark mode 自動適配
+
+### Footer
+
+```tsx
+import { Footer, FooterColumn } from '@/components/blocks/Footer'
+
+const columns: FooterColumn[] = [
+  { heading: '產品', links: [{ label: '功能', href: '/features' }] },
+  { heading: '資源', links: [{ label: '文件', href: '/docs' }] },
+]
+
+<Footer
+  brandMark="MY APP"
+  tagline="讓工作更輕鬆的 SaaS 工具。"
+  columns={columns}
+  legal={`© ${new Date().getFullYear()} My App. All rights reserved.`}
+/>
+```
+
+- Server Component（無 `'use client'`）
+- 2 col brand + 最多 3 col 連結欄
+- `legal` 選填
+
+### 典型 layout 結構
+
+```tsx
+// src/app/(site)/layout.tsx
+import { NavBar } from '@/components/blocks/NavBar'
+import { Footer } from '@/components/blocks/Footer'
+
+export default function SiteLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="min-h-screen flex flex-col">
+      <NavBar brandMark="MY APP" links={[...]} cta={{ label: '登入', href: '/login' }} />
+      <main className="flex-1 pt-16">{children}</main>
+      <Footer brandMark="MY APP" columns={[...]} />
+    </div>
+  )
+}
+```
+
+> `pt-16` 補齊 NavBar 固定高度（h-16 = 64px）。
+
+---
 
 ## 新增 Entity 的完整步驟（萬用 CRUD）
 
