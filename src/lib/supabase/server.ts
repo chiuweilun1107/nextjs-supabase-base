@@ -1,6 +1,8 @@
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 
+// 加上型別：跑完 `npm run db:types` 後，改成 createServerClient<Database>(...)
+// 並加上 import type { Database } from './database.types'
 export async function createClient() {
   const cookieStore = await cookies()
 

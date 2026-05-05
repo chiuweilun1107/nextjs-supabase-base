@@ -18,16 +18,33 @@
 
 ```
 src/
-├── app/                     # Next.js App Router 頁面
+├── app/
 │   ├── (auth)/              # 未登入路由群組（login, register, auth/callback）
-│   └── (dashboard)/         # 登入後路由群組（dashboard）
+│   ├── (dashboard)/         # 登入後路由群組（dashboard）
+│   └── api/
+│       ├── notes/           # CRUD 範例（萬用模板，開新 entity 複製這個）
+│       │   ├── route.ts     # GET 列表 / POST 新增
+│       │   └── [id]/route.ts # GET 單筆 / PATCH 修改 / DELETE
+│       └── attachments/     # 檔案上傳範例
+│           ├── route.ts     # GET 列表 / POST 上傳（multipart）
+│           └── [id]/route.ts # GET signed URL / DELETE
 ├── components/
 │   ├── ui/                  # shadcn/ui 基礎元件
 │   └── auth/                # 身份驗證相關元件
 └── lib/
     ├── supabase/
     │   ├── client.ts        # Browser Client（Client Component 用）
-    │   └── server.ts        # Server Client（Server Component / Route Handler 用）
+    │   ├── server.ts        # Server Client（Server Component / Route Handler 用）
+    │   ├── admin.ts         # Admin Client（service role，僅 server-side 使用）
+    │   └── database.types.ts # 自動產生（npm run db:types），勿手動修改
+    ├── api/
+    │   ├── errors.ts        # 統一 API 錯誤回應格式
+    │   ├── validation.ts    # zod parse helpers（parseBody / parseQuery）
+    │   ├── auth.ts          # requireUser() — Route Handler 取得登入使用者
+    │   └── logger.ts        # JSON logger + requestId()
+    ├── schemas/
+    │   ├── _template.ts     # 新 entity 的 zod schema 範本
+    │   └── note.ts          # notes 的 zod schemas
     └── utils.ts             # cn() 工具函式
 ```
 
@@ -68,6 +85,91 @@ public.profiles (
 - 外鍵命名為 `{table_singular}_id`
 - 時間欄位統一用 `timestamptz`
 - 新資料表必須啟用 RLS
+
+## 新增 Entity 的完整步驟（萬用 CRUD）
+
+每次要加新功能表（例如 `tasks`、`bugs`、`documents`），照這 4 步走：
+
+**1. 建 Migration**
+複製 `supabase/migrations/002_notes.sql`，改名為下一個編號（例如 `005_tasks.sql`）。
+把所有 `notes` 改成你的表名（`tasks`），調整欄位。
+
+**2. 建 Zod Schema**
+複製 `src/lib/schemas/note.ts`，改名為 `task.ts`，調整欄位定義。
+
+**3. 建 API Routes**
+把 `src/app/api/notes/` 整個資料夾複製為 `src/app/api/tasks/`。
+把所有 `note` / `notes` / `createNoteSchema` / `updateNoteSchema` 替換成對應的 `task` 版本。
+
+**4. 產生 TypeScript Types**
+```bash
+npm run db:types
+```
+執行完後 `src/lib/supabase/database.types.ts` 會自動更新，型別即時可用。
+
+---
+
+## 檔案上傳使用方式
+
+前置作業：在 Supabase Dashboard > Storage，建立名為 `attachments` 的 **private** bucket。
+
+```bash
+# 上傳（multipart/form-data，欄位名：file）
+curl -X POST http://localhost:3000/api/attachments \
+  -H "Cookie: <session-cookie>" \
+  -F "file=@/path/to/file.pdf"
+
+# 取得下載連結（有效 1 小時）
+curl http://localhost:3000/api/attachments/<id> \
+  -H "Cookie: <session-cookie>"
+
+# 刪除
+curl -X DELETE http://localhost:3000/api/attachments/<id> \
+  -H "Cookie: <session-cookie>"
+```
+
+---
+
+## API 錯誤回應格式
+
+所有 API 錯誤統一使用以下格式：
+
+```json
+{
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "資料格式錯誤",
+    "details": { "title": ["標題必填"] }
+  }
+}
+```
+
+常見 HTTP 狀態碼對應：
+- `400` — 請求格式錯誤
+- `401` — 未登入
+- `403` — 權限不足
+- `404` — 資源不存在
+- `409` — 資料衝突
+- `422` — 資料驗證失敗（欄位錯誤詳情在 `details`）
+- `500` — 伺服器錯誤
+
+---
+
+## 環境變數（完整說明）
+
+```
+NEXT_PUBLIC_SUPABASE_URL=       # Supabase 專案 URL
+NEXT_PUBLIC_SUPABASE_ANON_KEY=  # Supabase anon key（前後端都可用）
+SUPABASE_SERVICE_ROLE_KEY=      # service role key（僅 server-side，admin.ts 用）
+NEXT_PUBLIC_APP_URL=            # 應用程式公開 URL
+```
+
+`admin.ts` 使用 `SUPABASE_SERVICE_ROLE_KEY`，可以繞過 RLS，適合：
+- 後台管理操作
+- Webhook 接收（外部服務觸發的寫入）
+- 跨使用者操作
+
+---
 
 ## 路由保護
 
