@@ -1,18 +1,18 @@
-# next-supabase-starter — Claude Code 慣例說明
+# nextjs-supabase-base — Claude Code 慣例說明
 
 ## 技術棧版本
 
-| 套件 | 版本 |
-|------|------|
-| Next.js | ^15.0.0 (App Router) |
-| React | ^19.0.0 |
-| TypeScript | ^5.0.0 (strict mode) |
-| Tailwind CSS | ^4.0.0 |
-| shadcn/ui | 手動安裝（components.json 設定） |
-| Supabase JS | ^2.45.0 |
-| @supabase/ssr | ^0.5.0 |
-| react-hook-form | ^7.53.0 |
-| zod | ^3.23.0 |
+| 套件            | 版本                             |
+| --------------- | -------------------------------- |
+| Next.js         | ^15.0.0 (App Router)             |
+| React           | ^19.0.0                          |
+| TypeScript      | ^5.0.0 (strict mode)             |
+| Tailwind CSS    | ^4.0.0                           |
+| shadcn/ui       | 手動安裝（components.json 設定） |
+| Supabase JS     | ^2.45.0                          |
+| @supabase/ssr   | ^0.5.0                           |
+| react-hook-form | ^7.53.0                          |
+| zod             | ^3.23.0                          |
 
 ## 目錄結構
 
@@ -99,7 +99,7 @@ public.profiles (
 import { NavBar } from '@/components/blocks/NavBar'
 
 // layout.tsx 範例
-<NavBar
+;<NavBar
   brandMark="MY APP"
   links={[
     { label: '功能', href: '/features' },
@@ -173,9 +173,11 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
 把所有 `note` / `notes` / `createNoteSchema` / `updateNoteSchema` 替換成對應的 `task` 版本。
 
 **4. 產生 TypeScript Types**
+
 ```bash
 npm run db:types
 ```
+
 執行完後 `src/lib/supabase/database.types.ts` 會自動更新，型別即時可用。
 
 ---
@@ -216,6 +218,7 @@ curl -X DELETE http://localhost:3000/api/attachments/<id> \
 ```
 
 常見 HTTP 狀態碼對應：
+
 - `400` — 請求格式錯誤
 - `401` — 未登入
 - `403` — 權限不足
@@ -236,6 +239,7 @@ NEXT_PUBLIC_APP_URL=            # 應用程式公開 URL
 ```
 
 `admin.ts` 使用 `SUPABASE_SERVICE_ROLE_KEY`，可以繞過 RLS，適合：
+
 - 後台管理操作
 - Webhook 接收（外部服務觸發的寫入）
 - 跨使用者操作
@@ -284,20 +288,20 @@ docker compose up -d
 
 **所有 UI 元件必須使用 shadcn/ui，不得自己刻或用其他 UI library。**
 
-| 需求 | 使用 |
-|------|------|
-| 按鈕 | `<Button>` from `@/components/ui/button` |
-| 輸入框 | `<Input>` from `@/components/ui/input` |
-| 表單 | `<Form>` + `<FormField>` from `@/components/ui/form` |
-| 標籤 | `<Label>` from `@/components/ui/label` |
-| 卡片 | `<Card>` / `<CardHeader>` / `<CardContent>` from `@/components/ui/card` |
-| 頁籤 | `<Tabs>` / `<TabsList>` / `<TabsTrigger>` from `@/components/ui/tabs` |
-| 對話框 | `<Dialog>` from `@/components/ui/dialog` |
-| 下拉選單 | `<Select>` from `@/components/ui/select` |
-| 提示訊息 | `<Toast>` / `useToast` from `@/components/ui/toast` |
-| 徽章 | `<Badge>` from `@/components/ui/badge` |
-| 分隔線 | `<Separator>` from `@/components/ui/separator` |
-| 載入動畫 | shadcn skeleton 或 lucide `<Loader2 className="animate-spin">` |
+| 需求     | 使用                                                                    |
+| -------- | ----------------------------------------------------------------------- |
+| 按鈕     | `<Button>` from `@/components/ui/button`                                |
+| 輸入框   | `<Input>` from `@/components/ui/input`                                  |
+| 表單     | `<Form>` + `<FormField>` from `@/components/ui/form`                    |
+| 標籤     | `<Label>` from `@/components/ui/label`                                  |
+| 卡片     | `<Card>` / `<CardHeader>` / `<CardContent>` from `@/components/ui/card` |
+| 頁籤     | `<Tabs>` / `<TabsList>` / `<TabsTrigger>` from `@/components/ui/tabs`   |
+| 對話框   | `<Dialog>` from `@/components/ui/dialog`                                |
+| 下拉選單 | `<Select>` from `@/components/ui/select`                                |
+| 提示訊息 | `<Toast>` / `useToast` from `@/components/ui/toast`                     |
+| 徽章     | `<Badge>` from `@/components/ui/badge`                                  |
+| 分隔線   | `<Separator>` from `@/components/ui/separator`                          |
+| 載入動畫 | shadcn skeleton 或 lucide `<Loader2 className="animate-spin">`          |
 
 新增 shadcn 元件：`npx shadcn@latest add <component>`
 
