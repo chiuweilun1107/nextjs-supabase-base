@@ -1,7 +1,7 @@
 # nextjs-supabase-base
 
 > Next.js 15 + Supabase 全端專案地基。AI coding agent 進此專案，先讀本檔。
-> 本檔為 [AGENTS.md](https://agents.md) 跨工具標準格式；`CLAUDE.md` 是指向本檔的 symlink（Claude Code 相容）。
+> 本檔為 [AGENTS.md](https://agents.md) 跨工具標準格式；`CLAUDE.md` 透過 `@AGENTS.md` import 本檔（Claude Code 相容）。
 
 ---
 
