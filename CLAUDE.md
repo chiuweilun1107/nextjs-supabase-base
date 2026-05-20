@@ -223,7 +223,7 @@ docker compose up -d
 
 - 要某個元件 → 先找 `@/components/ui/`
 - `@/components/ui/` 沒有 → `npx shadcn@latest add <component>` 裝官方版
-- shadcn 沒提供、但需要無障礙互動邏輯（focus trap / keyboard nav / aria）→ 直接用底層 `@radix-ui/react-*` primitive 自行加 Tailwind 樣式
+- shadcn 沒提供、但需要無障礙互動邏輯（focus trap / keyboard nav / aria）→ `npm install @radix-ui/react-<x>` 裝底層 primitive 自行加 Tailwind 樣式（Radix 是 npm package，無 CLI；大多數情況 `npx shadcn add` 會自動裝好依賴的 Radix primitive，不必手動）
 - **永遠禁止**從零手刻 button / input / dialog / dropdown / tabs 等基礎互動元件的互動邏輯
 
 | 需求     | 使用                                                                    |
