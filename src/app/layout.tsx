@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   description:
     'A production-ready Next.js 15 + Supabase + shadcn/ui starter. Clone once, own forever.',
   openGraph: {
-    title: 'next-supabase-starter',
+    title: 'nextjs-supabase-base',
     description:
       'A production-ready Next.js 15 + Supabase + shadcn/ui starter. Clone once, own forever.',
     type: 'website',
