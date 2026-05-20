@@ -23,6 +23,7 @@
 | 按鈕     | `<Button>` from `@/components/ui/button`                       |
 | 輸入框   | `<Input>` from `@/components/ui/input`                         |
 | 表單     | `<Form>` + `<FormField>` from `@/components/ui/form`           |
+| 標籤     | `<Label>` from `@/components/ui/label`                         |
 | 卡片     | `<Card>` 系列 from `@/components/ui/card`                      |
 | 頁籤     | `<Tabs>` 系列 from `@/components/ui/tabs`                      |
 | 對話框   | `<Dialog>` from `@/components/ui/dialog`                       |
