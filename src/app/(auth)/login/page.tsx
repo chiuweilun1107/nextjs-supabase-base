@@ -3,12 +3,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { LoginForm } from '@/components/auth/login-form'
 
 export const metadata: Metadata = {
-  title: '登入 | next-supabase-starter',
+  title: '登入 | nextjs-supabase-base',
 }
 
 export default function LoginPage() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-background px-4">
+    <main className="bg-background flex min-h-screen items-center justify-center px-4">
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl">歡迎回來</CardTitle>
