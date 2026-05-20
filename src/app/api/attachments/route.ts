@@ -11,7 +11,7 @@ import { randomUUID } from 'crypto'
 const BUCKET = 'attachments'
 const MAX_SIZE = 10 * 1024 * 1024 // 10 MB
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   const rid = requestId()
   const auth = await requireUser()
   if (!auth.ok) return auth.response

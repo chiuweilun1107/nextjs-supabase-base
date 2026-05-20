@@ -27,11 +27,13 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'next-supabase-starter — Build faster. Ship with confidence.',
-  description: 'A production-ready Next.js 15 + Supabase + shadcn/ui starter. Clone once, own forever.',
+  title: 'App — nextjs-supabase-base',
+  description:
+    'A production-ready Next.js 15 + Supabase + shadcn/ui starter. Clone once, own forever.',
   openGraph: {
     title: 'next-supabase-starter',
-    description: 'A production-ready Next.js 15 + Supabase + shadcn/ui starter. Clone once, own forever.',
+    description:
+      'A production-ready Next.js 15 + Supabase + shadcn/ui starter. Clone once, own forever.',
     type: 'website',
   },
 }

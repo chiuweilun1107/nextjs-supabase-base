@@ -2,11 +2,11 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Loader2 } from 'lucide-react'
+import { toast } from 'sonner'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -19,44 +19,45 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 
-const loginSchema = z.object({
-  email: z.string().email('請輸入有效的電子郵件'),
-  password: z.string().min(6, '密碼至少需要 6 個字元'),
-})
+const schema = z
+  .object({
+    password: z.string().min(8, '密碼至少需要 8 個字元'),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: '兩次輸入的密碼不一致',
+    path: ['confirmPassword'],
+  })
 
-type LoginFormValues = z.infer<typeof loginSchema>
+type Values = z.infer<typeof schema>
 
-export function LoginForm() {
+export function ResetPasswordForm() {
   const router = useRouter()
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
-  const form = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: '',
-      password: '',
-    },
+  const form = useForm<Values>({
+    resolver: zodResolver(schema),
+    defaultValues: { password: '', confirmPassword: '' },
   })
 
-  async function onSubmit(values: LoginFormValues) {
+  async function onSubmit(values: Values) {
     setIsLoading(true)
     setError(null)
 
     const supabase = createClient()
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email: values.email,
+    const { error: updateError } = await supabase.auth.updateUser({
       password: values.password,
     })
 
-    if (signInError) {
-      setError('電子郵件或密碼不正確，請重試。')
+    if (updateError) {
+      setError('更新失敗，重設連結可能已過期，請重新申請。')
       setIsLoading(false)
       return
     }
 
-    router.push('/dashboard')
-    router.refresh()
+    toast.success('密碼已更新，請用新密碼登入')
+    router.push('/login')
   }
 
   return (
@@ -64,12 +65,17 @@ export function LoginForm() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
-          name="email"
+          name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>電子郵件</FormLabel>
+              <FormLabel>新密碼</FormLabel>
               <FormControl>
-                <Input type="email" placeholder="you@example.com" autoComplete="email" {...field} />
+                <Input
+                  type="password"
+                  placeholder="••••••••"
+                  autoComplete="new-password"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -77,23 +83,15 @@ export function LoginForm() {
         />
         <FormField
           control={form.control}
-          name="password"
+          name="confirmPassword"
           render={({ field }) => (
             <FormItem>
-              <div className="flex items-center justify-between">
-                <FormLabel>密碼</FormLabel>
-                <Link
-                  href="/forgot-password"
-                  className="text-primary text-xs font-medium underline-offset-4 hover:underline"
-                >
-                  忘記密碼？
-                </Link>
-              </div>
+              <FormLabel>確認新密碼</FormLabel>
               <FormControl>
                 <Input
                   type="password"
                   placeholder="••••••••"
-                  autoComplete="current-password"
+                  autoComplete="new-password"
                   {...field}
                 />
               </FormControl>
@@ -110,18 +108,8 @@ export function LoginForm() {
 
         <Button type="submit" className="w-full" disabled={isLoading}>
           {isLoading && <Loader2 className="animate-spin" aria-hidden="true" />}
-          登入
+          更新密碼
         </Button>
-
-        <p className="text-muted-foreground text-center text-sm">
-          還沒有帳號？{' '}
-          <Link
-            href="/register"
-            className="text-primary font-medium underline-offset-4 hover:underline"
-          >
-            立即註冊
-          </Link>
-        </p>
       </form>
     </Form>
   )
