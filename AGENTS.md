@@ -7,7 +7,7 @@
 
 ## ⚠️ 複用規範（強制 — 最重要，先讀）
 
-四條硬規則。違反 = 不合格。規則 A 由 ESLint 自動強制（`npm run lint` 會 error）；B/C/D 靠 code review / QA audit（見 `docs/qa-ui-reuse-audit.md`）。
+五條硬規則。違反 = 不合格。規則 A 由 ESLint 自動強制（`npm run lint` 會 error）；B/C/D 靠 code review / QA audit（見 `docs/qa-ui-reuse-audit.md`）；規則 E 是所有 UI / 頁面任務的前置條件。
 
 ### 規則 A — 前端用 shadcn/ui，不手刻
 
@@ -55,6 +55,18 @@ Route Handler 禁止手刻 auth 檢查 / error response / 參數驗證：
 - 新功能表照下方「新增 Entity 的完整步驟」複製 `notes` 模板，不從零寫 route
 - 跨 route 重複的 server 邏輯（共用查詢 / 權限判斷）→ 抽到 `lib/`，route 只做 orchestration
 - schema 一律 `lib/schemas/` 定義（複製 `_template.ts`），不在 route 內 inline zod
+
+### 規則 E — UI / 頁面任務前，先確立 `DESIGN.md`
+
+`DESIGN.md` 是本專案的視覺 ground truth（色票 / 字級 / 間距 / 圓角 / 陰影 / 動畫 token、元件 Do/Don't、Anti-Pattern NEVER 清單、版面原則）。**開始任何 UI / 頁面任務前，第一步先 `Read DESIGN.md`**，依其狀態分兩種處理：
+
+- **`DESIGN.md` 仍是空白骨架（各段含 `TODO`）→ 先別動手。** 必須先與用戶跑一次設計訪談，確立本專案的設計原則（品牌調性、色彩方向、字體偏好、圓角/密度風格、參考對象網站或產品），把 `DESIGN.md` 各段填滿，用戶確認後才開工。
+  - 用戶有提供參考 URL / 截圖 → 用 `/design-md` skill 萃取設計 DNA 填入
+  - 沒有參考來源 → 用互動 Q&A 逐段問出設計原則再填
+  - **嚴禁**：跳過訪談、自行臆測設計、或沿用其他專案的 `DESIGN.md`
+- **`DESIGN.md` 已客製完成（無 `TODO`）→ 直接讀，照其 token 開發。** 顏色 / 字級 / 間距 / 圓角 / 陰影一律用 `DESIGN.md` 的 token，不自訂數值；嚴守其 Anti-Pattern（NEVER）清單。
+
+純後端 / API / schema 任務不涉及畫面 → 可略過本規則（按需載入，不增後端任務 context 成本）。
 
 ---
 
