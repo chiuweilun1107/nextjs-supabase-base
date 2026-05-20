@@ -30,10 +30,7 @@ src/
 │           └── [id]/route.ts # GET signed URL / DELETE
 ├── components/
 │   ├── ui/                  # shadcn/ui 基礎元件
-│   ├── auth/                # 身份驗證相關元件
-│   └── blocks/
-│       ├── NavBar.tsx       # 固定頂部導航（'use client'，含 active state + mobile hamburger）
-│       └── Footer.tsx       # 多欄頁腳（品牌名 + tagline + 連結欄 + 版權）
+│   └── auth/                # 身份驗證相關元件
 └── lib/
     ├── supabase/
     │   ├── client.ts        # Browser Client（Client Component 用）
@@ -88,72 +85,6 @@ public.profiles (
 - 外鍵命名為 `{table_singular}_id`
 - 時間欄位統一用 `timestamptz`
 - 新資料表必須啟用 RLS
-
-## Blocks 使用方式（NavBar / Footer）
-
-`src/components/blocks/` 是佈局積木，直接放進 layout.tsx 即用。
-
-### NavBar
-
-```tsx
-import { NavBar } from '@/components/blocks/NavBar'
-
-// layout.tsx 範例
-;<NavBar
-  brandMark="MY APP"
-  links={[
-    { label: '功能', href: '/features' },
-    { label: '定價', href: '/pricing' },
-  ]}
-  cta={{ label: '開始使用', href: '/register' }}
-/>
-```
-
-- `'use client'`（使用 `usePathname` + `useState`）
-- 固定置頂，自動 active state，手機版含 hamburger
-- 全用 `hsl(var(--*))` shadcn CSS 變數，切 dark mode 自動適配
-
-### Footer
-
-```tsx
-import { Footer, FooterColumn } from '@/components/blocks/Footer'
-
-const columns: FooterColumn[] = [
-  { heading: '產品', links: [{ label: '功能', href: '/features' }] },
-  { heading: '資源', links: [{ label: '文件', href: '/docs' }] },
-]
-
-<Footer
-  brandMark="MY APP"
-  tagline="讓工作更輕鬆的 SaaS 工具。"
-  columns={columns}
-  legal={`© ${new Date().getFullYear()} My App. All rights reserved.`}
-/>
-```
-
-- Server Component（無 `'use client'`）
-- 2 col brand + 最多 3 col 連結欄
-- `legal` 選填
-
-### 典型 layout 結構
-
-```tsx
-// src/app/(site)/layout.tsx
-import { NavBar } from '@/components/blocks/NavBar'
-import { Footer } from '@/components/blocks/Footer'
-
-export default function SiteLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="min-h-screen flex flex-col">
-      <NavBar brandMark="MY APP" links={[...]} cta={{ label: '登入', href: '/login' }} />
-      <main className="flex-1 pt-16">{children}</main>
-      <Footer brandMark="MY APP" columns={[...]} />
-    </div>
-  )
-}
-```
-
-> `pt-16` 補齊 NavBar 固定高度（h-16 = 64px）。
 
 ---
 
@@ -284,9 +215,16 @@ docker compose up -d
 
 複製 `cloudflare-tunnel/config.yml.example` 為 `config.yml`，填入 Tunnel ID 與 hostname。
 
-## UI 元件規範（強制）
+## 前端 UI 複用規範（強制）
 
-**所有 UI 元件必須使用 shadcn/ui，不得自己刻或用其他 UI library。**
+### 規則 A — 用 shadcn/ui，不手刻
+
+**所有 UI 元件必須使用 shadcn/ui（底層為 Radix UI primitives），不得自己刻或用其他 UI library。**
+
+- 要某個元件 → 先找 `@/components/ui/`
+- `@/components/ui/` 沒有 → `npx shadcn@latest add <component>` 裝官方版
+- shadcn 沒提供、但需要無障礙互動邏輯（focus trap / keyboard nav / aria）→ 直接用底層 `@radix-ui/react-*` primitive 自行加 Tailwind 樣式
+- **永遠禁止**從零手刻 button / input / dialog / dropdown / tabs 等基礎互動元件的互動邏輯
 
 | 需求     | 使用                                                                    |
 | -------- | ----------------------------------------------------------------------- |
@@ -298,12 +236,40 @@ docker compose up -d
 | 頁籤     | `<Tabs>` / `<TabsList>` / `<TabsTrigger>` from `@/components/ui/tabs`   |
 | 對話框   | `<Dialog>` from `@/components/ui/dialog`                                |
 | 下拉選單 | `<Select>` from `@/components/ui/select`                                |
-| 提示訊息 | `<Toast>` / `useToast` from `@/components/ui/toast`                     |
+| 提示訊息 | `toast()` from `sonner`（`<Toaster>` 已掛在 layout.tsx）                |
 | 徽章     | `<Badge>` from `@/components/ui/badge`                                  |
 | 分隔線   | `<Separator>` from `@/components/ui/separator`                          |
 | 載入動畫 | shadcn skeleton 或 lucide `<Loader2 className="animate-spin">`          |
 
 新增 shadcn 元件：`npx shadcn@latest add <component>`
+
+### 規則 B — 重複的 UI 立刻抽共通元件
+
+**同一個 UI pattern 出現第 2 次 → 立刻抽成 `src/components/` 共通元件，第 3 處開始一律 import，禁止複製貼上。**
+
+- 判準：兩段 JSX 結構相同、只有資料/文字不同 → 就是該抽的訊號
+- 抽出的元件放 `src/components/{領域}/`（例：`src/components/notes/note-card.tsx`）
+- 用具名匯出、props 介面明確、保持 brand-agnostic（不寫死顏色/文案）
+- 抽完後回頭把原本重複的地方全部換成 import
+
+## 後端複用規範（強制）
+
+### 規則 C — API route 一律走 lib/api 中介層，不手刻
+
+**Route Handler 禁止手刻 auth 檢查 / error response / 參數驗證**，一律用 `lib/api`：
+
+| 需求              | 用                                                       | 不准                                        |
+| ----------------- | -------------------------------------------------------- | ------------------------------------------- |
+| 取登入使用者      | `requireUser()` from `lib/api/auth`                      | 自己 `supabase.auth.getUser()` + 手寫 401   |
+| 解析/驗證 request | `parseBody()` / `parseQuery()` from `lib/api/validation` | 手刻 try-catch JSON.parse                   |
+| 回錯誤            | `lib/api/errors` 的統一格式                              | 自己 `NextResponse.json({error}, {status})` |
+| 記 log            | `logger` + `requestId()` from `lib/api/logger`           | `console.log`                               |
+
+### 規則 D — 新 entity 照模板複製，重複邏輯抽 lib/
+
+- 新功能表一律照「新增 Entity 的完整步驟」複製 `notes` 模板，不從零寫 route
+- 跨 route 重複的 server 邏輯（如共用查詢、權限判斷）→ 抽到 `lib/`，route 只做 orchestration
+- schema 一律 `lib/schemas/` 定義（複製 `_template.ts`），不在 route 內 inline zod
 
 ## 開發規範
 
