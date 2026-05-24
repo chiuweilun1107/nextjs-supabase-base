@@ -1,4 +1,6 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: hsl(var(--background));
@@ -23,6 +25,29 @@
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
+}
+
+/* ── @awesome-claude-design theme-nvidia (Phase D consumer validation) ────
+ * Tokens scoped to [data-theme="nvidia"] (NOT :root) so they only apply
+ * within wrapped sections — avoids polluting geji's own root theme tokens.
+ * Pattern matches producer side awesome-claude-design [data-theme] scoping.
+ * Wrap with <div data-theme="nvidia"> to apply.
+ * ────────────────────────────────────────────────────────────────── */
+[data-theme='nvidia'] {
+  --background: 0 0% 0%;
+  --foreground: 0 0% 100%;
+  --primary: 76 100% 36%;
+  --accent: 76 100% 36%;
+  --border: 0 0% 20%;
+  --primary-foreground: 0 0% 0%;
+  --muted-foreground: 0 0% 72%;
+  --popover: 0 0% 5%;
+  --secondary: 0 0% 16.5%;
+  --accent-foreground: 0 0% 0%;
+  --destructive: 358 65% 52%;
+  --destructive-foreground: 0 0% 100%;
+  --input: 0 0% 10%;
+  --ring: 76 100% 36%;
 }
 
 @layer base {
@@ -86,26 +111,26 @@
    * ============================================================ */
   :root {
     /* Colours */
-    --ds-bg: #FAFAF8;
-    --ds-surface: #F5F4F1;
-    --ds-surface-raised: #FFFFFF;
-    --ds-border: #E4E2DB;
-    --ds-border-subtle: #EEECE6;
-    --ds-text-primary: #1A1917;
-    --ds-text-secondary: #6B6860;
-    --ds-text-muted: #9E9B95;
-    --ds-accent: #CC785C;
-    --ds-accent-hover: #B8664A;
-    --ds-accent-subtle: #F7EDE8;
-    --ds-code-bg: #F0EEE9;
+    --ds-bg: #fafaf8;
+    --ds-surface: #f5f4f1;
+    --ds-surface-raised: #ffffff;
+    --ds-border: #e4e2db;
+    --ds-border-subtle: #eeece6;
+    --ds-text-primary: #1a1917;
+    --ds-text-secondary: #6b6860;
+    --ds-text-muted: #9e9b95;
+    --ds-accent: #cc785c;
+    --ds-accent-hover: #b8664a;
+    --ds-accent-subtle: #f7ede8;
+    --ds-code-bg: #f0eee9;
 
     /* Accent hue (for three.js HSL) */
     --ds-accent-h: 17;
 
     /* Typography */
-    --ds-font-serif: "Source Serif 4", "Georgia", serif;
-    --ds-font-sans: "Inter Tight", "Inter", system-ui, sans-serif;
-    --ds-font-mono: "JetBrains Mono", "Fira Code", monospace;
+    --ds-font-serif: 'Source Serif 4', 'Georgia', serif;
+    --ds-font-sans: 'Inter Tight', 'Inter', system-ui, sans-serif;
+    --ds-font-mono: 'JetBrains Mono', 'Fira Code', monospace;
     --ds-headline-weight: 400;
 
     /* Spacing scale (base 4px) */
@@ -145,17 +170,17 @@
 
   .dark {
     --ds-bg: #141311;
-    --ds-surface: #1D1B18;
+    --ds-surface: #1d1b18;
     --ds-surface-raised: #242119;
-    --ds-border: #2E2B26;
+    --ds-border: #2e2b26;
     --ds-border-subtle: #252320;
-    --ds-text-primary: #F0EDE6;
-    --ds-text-secondary: #A09D97;
-    --ds-text-muted: #6B6860;
-    --ds-accent: #D98B6E;
-    --ds-accent-hover: #E8A080;
-    --ds-accent-subtle: #2A1E18;
-    --ds-code-bg: #1A1816;
+    --ds-text-primary: #f0ede6;
+    --ds-text-secondary: #a09d97;
+    --ds-text-muted: #6b6860;
+    --ds-accent: #d98b6e;
+    --ds-accent-hover: #e8a080;
+    --ds-accent-subtle: #2a1e18;
+    --ds-code-bg: #1a1816;
 
     --ds-shadow-sm: 0 1px 4px 0 rgb(0 0 0 / 0.24);
     --ds-shadow-md: 0 4px 16px 0 rgb(0 0 0 / 0.32), 0 1px 4px 0 rgb(0 0 0 / 0.16);
@@ -163,7 +188,12 @@
   }
 
   /* Global resets for marketing typography */
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-weight: var(--ds-headline-weight, 400);
   }
 }

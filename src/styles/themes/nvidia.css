@@ -1,0 +1,87 @@
+[data-theme='nvidia'] {
+  /* shadcn-mapped tokens */
+  --background: 0 0% 0%;
+  --foreground: 0 0% 100%;
+  --card: 0 0% 10.2%;
+  --card-foreground: 0 0% 100%;
+  --popover: 0 0% 5%;
+  --popover-foreground: 0 0% 100%;
+  --primary: 76 100% 36%;
+  --primary-foreground: 0 0% 0%;
+  --secondary: 0 0% 16.5%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 0 0% 10.2%;
+  --muted-foreground: 0 0% 72%;
+  --accent: 76 100% 36%;
+  --accent-foreground: 0 0% 0%;
+  --destructive: 358 65% 52%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 0 0% 20%;
+  --input: 0 0% 10%;
+  --ring: 76 100% 36%;
+  --radius: 4px;
+
+  /* Brand-extended tokens */
+  --brand-bg-alt: 0 0% 5%;
+  --brand-surface-strong: 0 0% 16.5%;
+  --brand-text-dim: 0 0% 46%;
+  --brand-border-strong: 0 0% 30%;
+  --brand-accent-deep: 76 100% 27.6%;
+  --brand-accent-hover: 76 100% 41.6%;
+  --brand-accent-soft: 84 65% 74%;
+  --brand-secondary-blue: 200 96% 53%;
+  --brand-warning: 41 100% 50%;
+
+  /* Typography */
+  --brand-font-display: 'NVIDIA Sans', 'Helvetica Neue', Arial, system-ui, sans-serif;
+  --brand-font-body: 'NVIDIA Sans', 'Helvetica Neue', Arial, system-ui, sans-serif;
+  --brand-font-mono: 'JetBrains Mono', 'SF Mono', 'Cascadia Code', monospace;
+  --brand-display-weight: 700;
+  --brand-display-tracking: -0.01em;
+
+  font-family: var(--brand-font-body);
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+/* ── Interaction styles (escape hatch) ───────────────────────────── */
+/* Tabular numerals on benchmark/spec data — design.md §3 */
+[data-theme='nvidia'] .tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Interactive hover states (design.md §4): no lift/scale/glow, hard-edge */
+[data-theme='nvidia'] .sc-btn-primary {
+  transition: background-color 0.15s ease;
+}
+[data-theme='nvidia'] .sc-btn-primary:hover {
+  background-color: hsl(var(--brand-accent-hover)) !important;
+}
+
+[data-theme='nvidia'] .sc-btn-secondary {
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+[data-theme='nvidia'] .sc-btn-secondary:hover {
+  border-color: hsl(var(--primary)) !important;
+  color: hsl(var(--primary)) !important;
+}
+
+[data-theme='nvidia'] .sc-nav-link {
+  transition: color 0.15s ease;
+  text-decoration: none;
+}
+[data-theme='nvidia'] .sc-nav-link:hover,
+[data-theme='nvidia'] .sc-nav-link.active {
+  color: hsl(var(--primary)) !important;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+[data-theme='nvidia'] .sc-feature-card {
+  transition: border-color 0.2s ease;
+}
+[data-theme='nvidia'] .sc-feature-card:hover {
+  border-color: hsl(var(--primary)) !important;
+}
