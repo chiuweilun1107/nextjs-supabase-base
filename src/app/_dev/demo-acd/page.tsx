@@ -1,4 +1,15 @@
 /**
+ * ⚠️ RULE E EXEMPT: diagnostic page only — NOT subject to AGENTS.md Rule E
+ *    (DESIGN.md prerequisite for UI work).
+ *
+ * Reason: this page is a one-shot end-to-end validation of consuming
+ * @awesome-claude-design registry via shadcn CLI. It is NOT a production
+ * UI feature, NOT user-facing, and NOT part of the project's brand surface.
+ *
+ * Located under `src/app/_dev/` — Next.js private folder convention
+ * (`_` prefix) means this is NOT routed (no /_dev/demo-acd URL exists).
+ * To exercise during validation, temporarily rename `_dev` → `dev`.
+ *
  * Phase D End-to-end Validation — 地基 consume @awesome-claude-design registry
  *
  * Installed via:
@@ -6,11 +17,8 @@
  *   npx shadcn@latest add http://localhost:3456/r/theme-nvidia.json
  *
  * Hero.tsx copied into src/components/blocks/Hero.tsx (consumer owns the code).
- * NVIDIA theme cssVars merged into src/app/globals.css :root block.
- *
- * Scope: shadcn CLI defaults theme cssVars to :root (global). To get per-section
- * theming (multi-brand on same page), manually re-scope cssVars into a
- * [data-theme="<brand>"] selector after install. Documented limitation.
+ * NVIDIA theme cssVars merged into src/app/globals.css (manually re-scoped
+ * to [data-theme="nvidia"] block to avoid polluting geji's own :root tokens).
  */
 
 import { Hero } from '@/components/blocks/Hero'
